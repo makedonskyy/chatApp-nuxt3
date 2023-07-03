@@ -15,7 +15,19 @@ export default defineNuxtConfig({
             }
         }
     },
-    plugins: [],
+    // "serverMiddleware": [
+    //     { path: '/api/socket', handler: '~/middleware/socket.ts' }
+    // ],
+    serverHandlers: [
+        {
+            route: '/ws',
+            handler: '~/server/middleware/socket.ts',
+        },
+    ],
+    plugins: [
+        // Other plugins
+        //{ src: '~/plugins/socket.ts', mode: 'client' }
+    ],
     srcDir: 'src',
     app: {
         head: {

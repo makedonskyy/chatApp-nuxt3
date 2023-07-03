@@ -3,7 +3,7 @@
 </script>
 
 <template>
-hi
+  <MainChat/>
 </template>
 
 <style scoped>
