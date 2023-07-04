@@ -1,1 +1,1 @@
-# chatApp-nuxt3-capacitor
+# chatApp-nuxt3
