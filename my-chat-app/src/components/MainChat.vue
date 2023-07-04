@@ -1,52 +1,67 @@
 <template>
-<!--  <div>-->
-<!--    <div v-for="message in messages" :key="message.id">-->
-<!--      {{ message }}-->
-<!--    </div>-->
-<!--    <form @submit.prevent="sendMessage">-->
-<!--      <input v-model="newMessage" type="text" placeholder="Введите сообщение">-->
-<!--      <button type="submit">Отправить</button>-->
-<!--    </form>-->
-<!--  </div>-->
+  <div class="flex justify-center gap-6">
+    <div>
+      <div
+        v-for="message in messages"
+        :key="message.id"
+        class="w-full"
+        v-html="message.replace(/\n/g, '<br/>')"
+      />
+      <form @submit.prevent="sendMessage">
+        <textarea v-model="newMessage" type="text" class="w-full" placeholder="Введите сообщение" />
+        <button
+          type="submit"
+          class="focus:outline-none text-white bg-yellow-400 hover:bg-yellow-500 focus:ring-4 focus:ring-yellow-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:focus:ring-yellow-900"
+        >
+          Отправить
+        </button>
+      </form>
+    </div>
+    <div>
+      <div
+        v-for="message in messages"
+        :key="message.id"
+        class="w-full"
+        v-html="message.replace(/\n/g, '<br/>')"
+      />
+      <form @submit.prevent="sendMessage">
+        <textarea v-model="newMessage" type="text" class="w-full" placeholder="Введите сообщение" />
+        <button
+          type="submit"
+          class="focus:outline-none text-white bg-yellow-400 hover:bg-yellow-500 focus:ring-4 focus:ring-yellow-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:focus:ring-yellow-900"
+        >
+          Отправить
+        </button>
+      </form>
+    </div>
+  </div>
 </template>
 
 <script setup>
-// import { ref, onMounted } from 'vue'
-const { $io } = useNuxtApp();
+import { onMounted, ref } from 'vue'
 
-$io.on('connect', () => {
-  console.log(':connect');
-});
-$io.on('disconnect', () => {
-  console.log(':disconnect');
-});
+const { $io } = useNuxtApp()
 
-// export default {
-//   setup() {
-//     const messages = ref([])
-//     const newMessage = ref('')
-//
-//     const sendMessage = () => {
-//       if (newMessage.value) {
-//         console.log('111111')
-//         socket.emit('message', newMessage.value)
-//         console.log(newMessage.value)
-//         newMessage.value = ''
-//         console.log(messages.value)
-//       }
-//     }
-//
-//     onMounted(() => {
-//       socket.on('message', (data) => {
-//         messages.value.push(data)
-//       })
-//     })
-//
-//     return {
-//       messages,
-//       newMessage,
-//       sendMessage
-//     }
-//   }
-// }
+let messages = ref([])
+const newMessage = ref('')
+
+const sendMessage = () => {
+  if (newMessage.value) {
+    $io.emit('message', newMessage.value)
+    messages.value.push(newMessage.value)
+    newMessage.value = ''
+  }
+}
+
+onMounted(() => {
+  $io.on('connect', () => {
+    console.log(':connect')
+  })
+  $io.on('disconnect', () => {
+    console.log(':disconnect')
+  })
+  $io.on('sendMessage', (data) => {
+    messages.value.push(data)
+  })
+})
 </script>
